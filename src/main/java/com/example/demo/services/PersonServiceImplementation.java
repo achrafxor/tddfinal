@@ -17,4 +17,14 @@ public class PersonServiceImplementation implements InterfacePersonService {
     public Person getPersonDetails(String eMail) {
         return personRepository.getOne(eMail);
     }
+
+    @Override
+    public Person addPerson(Person person) {
+        return personRepository.save(person);
+
+    }
+    @Override
+    public Person updatePerson(Person person) {
+        return person;
+    }
 }

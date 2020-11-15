@@ -2,6 +2,7 @@ package com.example.demo.web.rest;
 
 import com.example.demo.model.Person;
 import com.example.demo.services.PersonServiceImplementation;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class PersonControllerTest {
     private PersonServiceImplementation personService;
 
     @Test
-    void getPerson_ReturnPersonsDetails() throws Exception{
-        given(personService.getPersonDetails("flen@softilys.tn")).willReturn(new Person("flen@softilys.tn","Flen","Ben Foulen"));
+    void getPerson_ReturnPersonsDetails() throws Exception {
+        given(personService.getPersonDetails("flen@softilys.tn")).willReturn(new Person("flen@softilys.tn", "Flen", "Ben Foulen"));
         mockMvc.perform(MockMvcRequestBuilders.get("/person/flen@softilys.tn")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(print())
@@ -36,4 +37,34 @@ public class PersonControllerTest {
                 .andExpect(jsonPath("lastName").value("Ben Foulen"))
                 .andExpect(jsonPath("email").value("flen@softilys.tn"));
     }
+
+    @Test
+    void addPerson_ReturnPersonDetails() throws Exception {
+        Person person = new Person("achrafsaoud@outlook.com", "achraf", "saoud");
+        given(personService.addPerson(new Person("achrafsaoud@outlook.com", "achraf", "saoud"))).willReturn(person);
+        mockMvc.perform(MockMvcRequestBuilders.post("/person/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(person)))
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+    @Test
+    void updatePerson_RetutnPersonDetails() throws Exception{
+        Person person = new Person("achrafsaoud@outlook.com", "achraf", "saoud");
+        given(personService.updatePerson(new Person("achrafsaoud@outlook.com","achraf","saoud"))).willReturn(person);
+        mockMvc.perform(MockMvcRequestBuilders.put("/person/update")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJsonString(person)))
+        .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

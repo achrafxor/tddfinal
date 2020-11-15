@@ -23,4 +23,11 @@ public class PersonRepositoryTest {
         assertThat(person.getFirstName()).isEqualTo("Flen");
 
     }
+    @Test
+    void addPerson_returnPersonDetails()throws Exception{
+        Person person=personRepository.save(new Person("achrafsaoud@outlook.com","achraf","saoud"));
+        assertThat(person.getEmail()).isEqualTo("achrafsaoud@outlook.com");
+        assertThat(person.getLastName()).isEqualTo("saoud");
+        assertThat(person.getFirstName()).isEqualTo("achraf");
+    }
 }
